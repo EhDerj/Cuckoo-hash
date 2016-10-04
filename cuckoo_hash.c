@@ -113,11 +113,19 @@ void hashtable_insert(hashtable_t* self, hash_record_t* v) {
     hashtable_put_rehash(self, v);
 }
 
-void* hashtable_get(hashtable_t* self, void* key) {
+void* hashtable_get_raw(hashtable_t* self, void* key) {
     hash_record_t* r = hashtable_record1(self, key);
     if(key == r->key) return r->value;
     r = hashtable_record2(self, key);
     if(key == r->key) return r->value;
+    return 0;
+}
+
+void* hashtable_get(hashtable_t* self, char* key) {
+    hash_record_t* r = hashtable_record1(self, key);
+    if(!strcmp(key, r->key)) return r->value;
+    r = hashtable_record2(self, key);
+    if(!strcmp(key, r->key)) return r->value;
     return 0;
 }
 

@@ -28,8 +28,10 @@ void hashtable_resize(hashtable_t* self, size_t size);
 void hashtable_grow(hashtable_t* self);
 void hashtable_insert(hashtable_t* self, hash_record_t* v);
 void hashtable_put(hashtable_t* self, void* key, void* value);
-void* hashtable_get(hashtable_t* self, void* key);
+void* hashtable_get_raw(hashtable_t* self, void* key);
+void* hashtable_get(hashtable_t* self, char* key);
 void hashtable_print(hashtable_t* self);
 void hashtable_foreach(hashtable_t* self, hashtable_func func);
 void hashtable_free(hashtable_t* self);
+
 #endif
