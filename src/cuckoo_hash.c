@@ -3,9 +3,12 @@
 
 void hashtable_resize(hashtable_t* self, size_t size) {
     self->records = realloc(self->records, sizeof(hash_record_t) * size);
+
     if(size > self->size) {
-        memset(self->records + self->size * sizeof(hash_record_t), 0x0, (size - self->size) * sizeof(hash_record_t));
+        size_t diff = (size - self->size) * sizeof(hash_record_t);
+        memset(&self->records[self->size], 0, diff);
     }
+
     self->size = size;
 }
 
@@ -19,20 +22,16 @@ hashtable_t* hashtable_new(size_t init_size) {
     return self;
 }
 
-hash_record_t* hashtable_at(hashtable_t* self, size_t index) {
-    return &self->records[index];
-}
-
 hash_record_t* hashtable_record1(hashtable_t* self, void* k) {
     intptr_t kk = (intptr_t)k;
     size_t pos = kk % self->size;
-    return hashtable_at(self, pos);
+    return &self->records[pos];
 }
 
 hash_record_t* hashtable_record2(hashtable_t* self, void* k) {
     intptr_t kk = (intptr_t)k;
     size_t pos = (kk / self->size) % self->size;
-    return hashtable_at(self, pos);
+    return &self->records[pos];
 }
 
 void hash_record_swap(hash_record_t* r1, hash_record_t* r2) {
@@ -123,9 +122,9 @@ void* hashtable_get_raw(hashtable_t* self, void* key) {
 
 void* hashtable_get(hashtable_t* self, char* key) {
     hash_record_t* r = hashtable_record1(self, key);
-    if(!strcmp(key, r->key)) return r->value;
+    if(r->key && !strcmp(key, r->key)) return r->value;
     r = hashtable_record2(self, key);
-    if(!strcmp(key, r->key)) return r->value;
+    if(r->key && !strcmp(key, r->key)) return r->value;
     return 0;
 }
 
