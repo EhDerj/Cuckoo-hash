@@ -11,5 +11,6 @@ all: $(OBJECTS)
 
 clean:
 	rm src/*.o
+	rm cuckoo
 
 .PHONY: all clean

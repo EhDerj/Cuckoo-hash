@@ -2,7 +2,7 @@
 // Cuckoo hashing test
 
 #include <stdio.h>
-#include <cuckoo_hash.h>
+#include "cuckoo_hash.h"
 
 // User space
 void hash_print(void* key, void* value) {

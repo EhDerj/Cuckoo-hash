@@ -6,16 +6,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#include <wchar.h>
 
 typedef struct {
     void* key;
     void* value;
+
 } hash_record_t;
 
 typedef struct {
     hash_record_t* records;
     size_t size;
     size_t key_count;
+    int (*CMP)(void*,void*) ;	// compare function    
 } hashtable_t;
 
 #define HASH_MAXLOOP 10
@@ -33,5 +37,7 @@ void* hashtable_get(hashtable_t* self, char* key);
 void hashtable_print(hashtable_t* self);
 void hashtable_foreach(hashtable_t* self, hashtable_func func);
 void hashtable_free(hashtable_t* self);
+int hashCompareStr(void* left,void*right);
+int hashCompareWStr(void* left,void*right);
 
 #endif
