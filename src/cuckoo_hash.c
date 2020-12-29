@@ -18,6 +18,7 @@ void hashtable_grow(hashtable_t* self) {
 
 hashtable_t* hashtable_new(size_t init_size) {
     hashtable_t* self = calloc(sizeof(hashtable_t), 1);
+    self->CMP = hashCompareStr ; // default compare function
     hashtable_resize(self, init_size);
     return self;
 }
@@ -122,9 +123,9 @@ void* hashtable_get_raw(hashtable_t* self, void* key) {
 
 void* hashtable_get(hashtable_t* self, char* key) {
     hash_record_t* r = hashtable_record1(self, key);
-    if(r->key && !strcmp(key, r->key)) return r->value;
+    if(r->key && !self->CMP(key, r->key)) return r->value;
     r = hashtable_record2(self, key);
-    if(r->key && !strcmp(key, r->key)) return r->value;
+    if(r->key && !self->CMP(key, r->key)) return r->value;
     return 0;
 }
 
@@ -147,4 +148,12 @@ void hashtable_foreach(hashtable_t* self, hashtable_func func) {
 void hashtable_free(hashtable_t* self) {
     free(self->records);
     free(self);
+}
+
+int hashCompareStr(void* left,void*right){
+	return strcmp( (char*)left,(char*)right ) ;
+}
+
+int hashCompareWStr(void* left,void*right){
+	return wcscmp( (wchar_t*)left,(wchar_t*)right ) ;
 }
